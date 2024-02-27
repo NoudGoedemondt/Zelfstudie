@@ -1,3 +1,4 @@
 "use strict";
-const noudIsCool = (x, y) => x + y;
-console.log(noudIsCool(1, 5));
+const empty = () => ({ kind: 'empty' });
+const full = (head, tail) => ({ kind: 'full', head: head, tail: tail });
+console.log(full(1, full(2, full(3, empty()))));
