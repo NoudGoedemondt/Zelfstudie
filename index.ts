@@ -111,7 +111,6 @@ printBeingName(owner)
 
 
 Recursive Types:
-*/
 
 type EmptyListNum = { kind: 'empty' } 
 type FullListNum = { kind: 'full', head: number, tail: ListNum }
@@ -125,18 +124,23 @@ const range = (lower: number, upper: number): ListNum =>
 
 const l: ListNum = range(1, 6)
 
-//console.log(JSON.stringify(l))
+console.log(JSON.stringify(l))
 
 
-const testRange = (lower: number, upper: number): number[] => lower > upper ? [] : [lower, ...testRange(lower + 1, upper)];
+///////////////////////////////////////
+Generics
+*/
 
-//console.log(testRange(1, 5))
+type ContentWithCounter<T> = { content: T, counter: number }
+const contentWithCounter = <T>(content: T): ContentWithCounter<T> => ({ content: content, counter: 0 })
+
+const incre = <T>(source: ContentWithCounter<T>): ContentWithCounter<T> => ({...source, counter: source.counter+1})
 
 
-const noudIsDom = (lower: number, upper: number): void => {
-    for (lower; lower <= upper; lower++) {
-        console.log(`${lower} < ${upper} = ${lower<upper}`)
-    }
-}
+const cwcOfTypeString = contentWithCounter<string>("Can contain any string")
+const cwcOfTypeNum = contentWithCounter<number>(123454325)
 
-console.log(noudIsDom(1, 5));
+const cwc = contentWithCounter<string>("hihi")
+
+console.log(cwcOfTypeString)
+console.log(cwcOfTypeNum)

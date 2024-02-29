@@ -112,17 +112,29 @@ printBeingName(owner)
 
 
 Recursive Types:
+
+type EmptyListNum = { kind: 'empty' }
+type FullListNum = { kind: 'full', head: number, tail: ListNum }
+type ListNum = EmptyListNum| FullListNum
+
+const empty = (): EmptyListNum => ({kind: 'empty'})
+const full = (head: number, tail: ListNum): FullListNum => ({kind: 'full', head: head, tail: tail})
+
+const range = (lower: number, upper: number): ListNum =>
+    lower > upper ? empty() : full(lower, range(lower + 1, upper))
+
+const l: ListNum = range(1, 6)
+
+console.log(JSON.stringify(l))
+
+
+///////////////////////////////////////
+Generics
 */
-const empty = () => ({ kind: 'empty' });
-const full = (head, tail) => ({ kind: 'full', head: head, tail: tail });
-const range = (lower, upper) => lower > upper ? empty() : full(lower, range(lower + 1, upper));
-const l = range(1, 6);
-//console.log(JSON.stringify(l))
-const testRange = (lower, upper) => lower > upper ? [] : [lower, ...testRange(lower + 1, upper)];
-//console.log(testRange(1, 5))
-const noudIsDom = (lower, upper) => {
-    for (lower; lower <= upper; lower++) {
-        console.log(`${lower} < ${upper} = ${lower < upper}`);
-    }
-};
-console.log(noudIsDom(1, 5));
+const contentWithCounter = (content) => ({ content: content, counter: 0 });
+const incre = (source) => (Object.assign(Object.assign({}, source), { counter: source.counter + 1 }));
+const cwcOfTypeString = contentWithCounter("Can contain any string");
+const cwcOfTypeNum = contentWithCounter(123454325);
+const cwc = contentWithCounter("hihi");
+console.log(cwcOfTypeString);
+console.log(cwcOfTypeNum);
