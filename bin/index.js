@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /*
 Recursive variables:
 
@@ -130,11 +131,95 @@ console.log(JSON.stringify(l))
 
 ///////////////////////////////////////
 Generics
+
+
+type ContentWithCounter<T> = { content: T, counter: number }
+const contentWithCounter = <T>(content: T): ContentWithCounter<T> => ({ content: content, counter: 0 })
+
+const incre = <T>(source: ContentWithCounter<T>): ContentWithCounter<T> => ({...source, counter: source.counter+1})
+
+
+const cwcOfTypeString = contentWithCounter<string>("Can contain any string")
+const cwcOfTypeNum = contentWithCounter<number>(123454325)
+
+const cwc = contentWithCounter<string>("hihi")
+
+console.log(cwcOfTypeString)
+console.log(cwcOfTypeNum)
+
+
+
+const numbers: Array<Array<number>> = [[1, 2, 3], [4, 5, 6]]
+
+//numbers[0] = numbers[1]
+
+for (const outer of numbers) {
+    for (const inner of outer) {
+        console.log(inner)
+    }
+}
+
+type Person = { name: string, surname: string }
+
+const person: Person = { name: 'John', surname: 'Doe'}
+
+// Simulate API call that has a succes rate of 90%, returns a person if successful
+const p0 : Promise<Person> =
+    new Promise<Person>((resolve, reject) => {
+        if (Math.random() <= 0.9) {
+            resolve(person)
+        } else {
+            reject("Error: wrong credentials")
+        }
+    })
+
+p0.then(reason => console.log(reason))
+    .catch(reason => console.log(`There has been a problem: ${reason}`))
+
+
+type Fun<a,b> = (_:a) => b
+
+type List<T> = { kind: "empty"} | { kind: "full", head:T, tail: List<T> }
+const emptyList = <T>() : List<T> => ({ kind: "empty" })
+const fullList = <T>(head: T, tail: List<T>)  : List<T> => ({ kind: "full", head: head, tail: tail })
+
+const forEach
+ : <element>(_:Fun<element, void>) => (_:List<element>) => void
+ = processElement => list => {
+    if (list.kind == "empty") return
+    processElement(list.head)
+    forEach(processElement)(list.tail)
+}
+
+const printAll = <T>(l: List<T>) => forEach<T>(console.log)(l)
+
+//construct list with elements of type number
+const l1: List<number> = fullList(1, fullList(2, fullList(3, emptyList())))
+
+//printAll(l1)
+
+const transform
+ : Fun<Fun<number, number>, Fun<List<number>, List<number>>>
+ = operation => inputList =>
+    inputList.kind == "empty" ? emptyList()
+    : fullList(operation(inputList.head), transform(operation)(inputList.tail))
+
+const increment
+ : Fun<List<number>, List<number>>
+ = inputList =>
+    transform(_ => _ + 1)(inputList)
+
+
+console.log(increment(l1))
+
 */
-const contentWithCounter = (content) => ({ content: content, counter: 0 });
-const incre = (source) => (Object.assign(Object.assign({}, source), { counter: source.counter + 1 }));
-const cwcOfTypeString = contentWithCounter("Can contain any string");
-const cwcOfTypeNum = contentWithCounter(123454325);
-const cwc = contentWithCounter("hihi");
-console.log(cwcOfTypeString);
-console.log(cwcOfTypeNum);
+const immutable_1 = require("immutable");
+let users = (0, immutable_1.Map)();
+const addUser = (newUser) => {
+    users = users.set(newUser.id, newUser);
+};
+addUser({ id: "6", name: "Noud", surname: "Goedemondt", age: 24 });
+addUser({ id: "7", name: "Deez", surname: "Nuts", age: 21 });
+console.log(users.get("6"));
+///////////////////////////////////////
+//OO
