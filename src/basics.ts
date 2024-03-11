@@ -210,7 +210,6 @@ const increment
 
 console.log(increment(l1))
 
-*/
 import { List, set, Range, Map } from "immutable";
 
 type User = { id:string, name:string, surname:string, age:number }
@@ -227,6 +226,9 @@ console.log(users.get("6"))
 
 ///////////////////////////////////////
 //OO
+*/
+
+
 
 
 
