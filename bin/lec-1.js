@@ -1,10 +1,25 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-const immutable_1 = require("immutable");
-let users = (0, immutable_1.Map)();
-const addUser = (newUser) => {
-    users = users.set(newUser.id, newUser);
+// lifting operator which takes as input a regular function and returns our
+// enriched function definition
+const Fun = (actual) => {
+    const f = actual;
+    // define then method
+    f.then = function (other) {
+        return Fun((input) => other(this(input)));
+        /* this(input) -> output
+         * give output to other for nextOutput
+         * other(this(input)) -> nextOutput
+         */
+    };
+    return f;
 };
-addUser({ id: "6", name: "Noud", surname: "Goedemondt", age: 24 });
-addUser({ id: "7", name: "Deez", surname: "Nuts", age: 21 });
-console.log(users.get("6"));
+// identity function
+const id = () => Fun((x) => x);
+const incr = Fun((x) => x + 1);
+const decr = Fun((x) => x - 1);
+const double = Fun((x) => x * 2);
+const gtz = Fun((x) => x > 2);
+const neg = Fun((x) => !x);
+const isEven = Fun((x) => x % 2 == 0);
+const sum = Fun((x) => x[0] + x[1]);
+const and = Fun((x) => x[0] && x[1]);
