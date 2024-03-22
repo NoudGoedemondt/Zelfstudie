@@ -1,3 +1,5 @@
+import Immutable, { Map } from "immutable";
+
 // wrapper datatype for functions
 type Fun<input, output> = {
   (input: input): output;
@@ -29,6 +31,49 @@ const Fun = <input, output>(
 // identity function
 const id = <s>() => Fun<s, s>((x) => x);
 
+type Updater<s> = Fun<s, s>;
+const Updater = Fun;
+
+/////////////////////////
+
+type Person = {
+  id: string;
+  fullName: string;
+  age: number;
+};
+
+const Person = {
+  Updaters: {
+    fullName: (fieldUpdater: Updater<Person["fullName"]>): Updater<Person> =>
+      Updater((person) => ({
+        ...person,
+        fullName: fieldUpdater(person.fullName),
+      })),
+    age: (fieldUpdater: Updater<Person["age"]>): Updater<Person> =>
+      Updater((person) => ({ ...person, age: fieldUpdater(person.age) })),
+  },
+};
+
+type Course = {
+  teacher: Person;
+  students: Immutable.Map<Person["id"], Person>;
+};
+
+const Course = {
+  Updaters: {
+    teacher: (fieldUpdater: Updater<Course["teacher"]>): Updater<Course> =>
+      Updater((course) => ({
+        ...course,
+        teacher: fieldUpdater(course.teacher),
+      })),
+    students: (fieldUpdater: Updater<Course["students"]>): Updater<Course> =>
+      Updater((course) => ({
+        ...course,
+        students: fieldUpdater(course.students),
+      })),
+  },
+};
+
 const incr = Fun((x: number) => x + 1);
 const decr = Fun((x: number) => x - 1);
 const double = Fun((x: number) => x * 2);
@@ -38,3 +83,18 @@ const isEven = Fun((x: number) => x % 2 == 0);
 
 const sum = Fun((x: [number, number]) => x[0] + x[1]);
 const and = Fun((x: [boolean, boolean]) => x[0] && x[1]);
+
+const noud: Person = { id: "ng", fullName: "Noud Goedemondt", age: 24 };
+const doctorify = Updater((s: string) => `Dr ${s}`);
+
+const course: Course = {
+  teacher: { id: "ng", fullName: "Noud Goedemondt", age: 24 },
+  students: Immutable.Map(),
+};
+
+const newCourse = Course.Updaters.teacher(Person.Updaters.fullName(doctorify))(
+  course
+);
+
+console.log(newCourse);
+console.log(noud);
