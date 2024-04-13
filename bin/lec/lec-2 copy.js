@@ -1,3 +1,5 @@
+"use strict";
+/*
 type Fun<input, output> = {
   (input: input): output;
   then: <nextOutput>(other: Fun<output, nextOutput>) => Fun<input, nextOutput>;
@@ -23,9 +25,7 @@ const incr = Fun((x: number) => x + 1);
 const decr = Fun((x: number) => x - 1);
 const double = Fun((x: number) => x * 2);
 
-const f = incr.then(incr.then(double).then(decr));
-console.log(f(1));
-
 type Countainer<a> = { content: a; counter: number };
 
 const c_n: Countainer<number> = { content: 10, counter: 0 };
+*/ 

@@ -1,4 +1,3 @@
-"use strict";
 /*
 type Fun<input, output> = {
   (input: input): output;
@@ -28,4 +27,4 @@ const double = Fun((x: number) => x * 2);
 type Countainer<a> = { content: a; counter: number };
 
 const c_n: Countainer<number> = { content: 10, counter: 0 };
-*/ 
+*/
